@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Productos{% endblock %}
+
+{% block content %}
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description }}</p>
+                        <p class="card-text">${{ product.price }}</p>
+                        <button class="btn btn-primary add-to-cart" data-id="{{ product.id }}">Añadir al Carrito</button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $('.add-to-cart').click(function(){
+                var productId = $(this).data('id');
+                $.ajax({
+                    url: "{% url 'add_to_cart' 0 %}".replace('0', productId),
+                    method: 'GET',
+                    success: function(data){
+                        var count = data.count;
+                        $('.navbar .badge').text(count);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
